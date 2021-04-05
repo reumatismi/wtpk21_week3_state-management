@@ -4,7 +4,7 @@ const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const app = express();
 const port = 3000;
-// älä tee näin projektissa!!!!
+// älä käytä projektissa...
 
 app.use(express.urlencoded({extended: false}));
 app.use(express.json());
