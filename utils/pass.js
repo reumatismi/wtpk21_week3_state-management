@@ -19,7 +19,7 @@ const users = [
 ];
 // *******************
 
-// fake database functions *********
+// fake database functions, normally in _model_ *********
 const getUser = (id) => {
   const user = users.filter((usr) => {
     if (usr.user_id === id) {

@@ -6,6 +6,8 @@ const passport = require('./utils/pass');
 const app = express();
 const port = 3000;
 
+// ei, ei näin proujektissa
+
 const loggedIn = (req, res, next) => {
   if (req.user) {
     next();
@@ -21,6 +23,8 @@ app.use(express.json());
 const username = 'naurismakkara';
 const password = 'k3cKosmieli';
 
+// älä tee näin projektissa
+
 app.use(cookieParser());
 app.use(session( {
   secret: 'aivan höpönpöpöä',
@@ -28,22 +32,19 @@ app.use(session( {
   saveUninitialized: true,
   cookie: {maxAge: 60 * 60 * 24},
 }));
+
 app.use(passport.initialize());
-app.use(passport.session());
+app.use(passport.session()); // älä te näin proujektissa
 
 app.set('views', './views');
 app.set('view engine', 'pug');
 
-app.post('/login',(req, res) =>{
-  const uname = req.body.username;
-  const passwd = req.body.password;
-  if (uname === username && passwd === password) {
-    req.session.kirjautunut = true;
-    res.redirect('/secret');
-  } else {
-    res.redirect('/form');
-  }
-});
+app.post('/login',
+    passport.authenticate('local', {failureRedirect: '/form'}),
+    (req, res) => {
+      console.log('success');
+      res.redirect('/secret');
+    });
 
 app.get('/', (req, res) => {
   res.render('home');
@@ -53,12 +54,8 @@ app.get('/form', (req, res) => {
   res.render('form');
 });
 
-app.get('/secret', (req, res) => {
-  if(req.session.kirjautunut) {
-    res.render('secret');
-  } else {
-    res.redirect('/form');
-  }
+app.get('/secret', loggedIn, (req, res) => {
+  res.render('secret');
 });
 
 app.get('/setCookie/:clr', (req, res) => {
