@@ -2,8 +2,17 @@
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
+const passport = require('./utils/pass');
 const app = express();
 const port = 3000;
+
+const loggedIn = (req, res, next) => {
+  if (req.user) {
+    next();
+  } else {
+    res.redirect('/form');
+  }
+};
 // älä käytä projektissa...
 
 app.use(express.urlencoded({extended: false}));
@@ -19,6 +28,8 @@ app.use(session( {
   saveUninitialized: true,
   cookie: {maxAge: 60 * 60 * 24},
 }));
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.set('views', './views');
 app.set('view engine', 'pug');
@@ -63,7 +74,5 @@ app.get('/deleteCookie/:clr', (req, res) => {
   res.clearCookie('color');
   res.send('cookie read');
 });
-
-
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
