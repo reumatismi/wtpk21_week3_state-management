@@ -72,4 +72,10 @@ app.get('/deleteCookie/:clr', (req, res) => {
   res.send('cookie read');
 });
 
+//älä tee näin projektissa
+app.get('/logout', (req, res)=> {
+  req.logout();
+  res.redirect('/form');
+});
+
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
